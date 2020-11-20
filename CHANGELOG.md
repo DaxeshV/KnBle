@@ -1,6 +1,7 @@
 KnBle Change Log
 ==========
 
+Version 2.0.3 *(2020-11-20)*  
 Version 2.0.2 *(2020-11-20)*
 ----------------------------
 - Add requestMtu and getMtu methods
