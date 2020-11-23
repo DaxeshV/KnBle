@@ -303,7 +303,22 @@ public class KnBle {
 			return;
 		}
 
-		DevicesManager.getInstance().connect(device, callback);
+		DevicesManager.getInstance().connect(device, false, callback);
+	}
+
+	/**
+	 * Connect to a device
+	 * @param device The device
+	 * @param autoConnect autoConnect
+	 * @param callback The callback
+	 */
+	public void connect(@NonNull BleDevice device, boolean autoConnect, @NonNull BleGattCallback callback) {
+		if(!isInit()) {
+			callback.onConnectFailed();
+			return;
+		}
+
+		DevicesManager.getInstance().connect(device, autoConnect, callback);
 	}
 
 	/**

@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-	implementation 'com.github.Karewan:KnBle:2.0.2'
+	implementation 'com.github.Karewan:KnBle:2.0.4'
 }
 ```
 
@@ -176,6 +176,11 @@ KnBle.getInstance().connect(device, new BleGattCallback() {
 
 	}
 });
+
+// OR
+
+// true==autoConnect
+KnBle.getInstance().connect(device, true, new BleGattCallback() {...
 ```
 
 #### Check if device has a gatt service

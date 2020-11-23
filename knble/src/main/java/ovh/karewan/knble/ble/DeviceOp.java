@@ -79,7 +79,6 @@ public class DeviceOp {
 	private BleReadCallback mReadCallback;
 	private BluetoothGattCharacteristic mReadCharacteristic;
 
-
 	/**
 	 * Class constructor
 	 * @param device The device
@@ -375,9 +374,10 @@ public class DeviceOp {
 
 	/**
 	 * Connect to the device
+	 * @param autoConnect autoConnect
 	 * @param callback The callback
 	 */
-	public void connect(@NonNull BleGattCallback callback) {
+	public void connect(boolean autoConnect, @NonNull BleGattCallback callback) {
 		if(KnBle.DEBUG) Log.d(LOG, "connect");
 
 		// Run on the main thread
@@ -391,6 +391,7 @@ public class DeviceOp {
 					if(KnBle.DEBUG) Log.d(LOG, "already connecting");
 					callback.onConnecting();
 					return;
+
 				case BleGattCallback.CONNECTED:
 					if(KnBle.DEBUG) Log.d(LOG, "already connected");
 					if(mBluetoothGatt != null) {
@@ -422,20 +423,20 @@ public class DeviceOp {
 				// Always connect with autoConnect==false for better connection speed
 				// Android 6+ (Connect with TRANSPORT_LE)
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-					setBluetoothGatt(mDevice.getDevice().connectGatt(KnBle.getInstance().getContext(), false, mBluetoothGattCallback, BluetoothDevice.TRANSPORT_LE));
+					setBluetoothGatt(mDevice.getDevice().connectGatt(KnBle.getInstance().getContext(), autoConnect, mBluetoothGattCallback, BluetoothDevice.TRANSPORT_LE));
 				} else {
 					// Android 5.0+ (Connect with reflection method for getting TRANSPORT_LE before Android 6.0)
 					try {
 						Method connectGattMethod = mDevice.getDevice().getClass().getDeclaredMethod("connectGatt", Context.class, boolean.class, BluetoothGattCallback.class, int.class);
 						connectGattMethod.setAccessible(true);
-						setBluetoothGatt((BluetoothGatt) connectGattMethod.invoke(mDevice.getDevice(), KnBle.getInstance().getContext(), false, mBluetoothGattCallback, 2));
+						setBluetoothGatt((BluetoothGatt) connectGattMethod.invoke(mDevice.getDevice(), KnBle.getInstance().getContext(), autoConnect, mBluetoothGattCallback, 2));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 
 				// If other methods have failed
-				if(mBluetoothGatt == null) setBluetoothGatt(mDevice.getDevice().connectGatt(KnBle.getInstance().getContext(), false, mBluetoothGattCallback));
+				if(mBluetoothGatt == null) setBluetoothGatt(mDevice.getDevice().connectGatt(KnBle.getInstance().getContext(), autoConnect, mBluetoothGattCallback));
 
 				// All method have failed
 				if(mBluetoothGatt == null) {

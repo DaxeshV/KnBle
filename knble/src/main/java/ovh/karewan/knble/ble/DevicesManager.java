@@ -189,11 +189,12 @@ public class DevicesManager {
 	/**
 	 * Connect to a device
 	 * @param device The device
+	 * @param autoConnect autoConnect
 	 * @param callback The callback
 	 */
-	public void connect(@NonNull BleDevice device, @NonNull BleGattCallback callback) {
+	public void connect(@NonNull BleDevice device, boolean autoConnect, @NonNull BleGattCallback callback) {
 		addDevice(device);
-		getDeviceOp(device).connect(callback);
+		getDeviceOp(device).connect(autoConnect, callback);
 	}
 
 	/**
